@@ -15,11 +15,5 @@ namespace TravelApi.Models
     public int Rating { get; set; }
 
     public string Review { get; set; }
-
-    // public List<Review> { get; set; }
-      // create a review object (properties includes text and author)
-      // review object with be stored in a list in each Destination
-      // let's attempt to access reviews with dot notation for PUT request
-      // stretch goal add authentication
   }
 }

@@ -98,6 +98,29 @@ namespace TravelApi.Controllers
       return NoContent();
     }
 
+    // [HttpPatch]
+    // public IActionResult AddReview(
+    // [FromBody] Destination<Review> patchDoc)
+    // {
+    //   if (patchDoc != null)
+    //   {
+    //     var review = CreateReview();
+
+    //     patchDoc.ApplyTo(review, ModelState);
+
+    //     if (!ModelState.IsValid)
+    //     {
+    //         return BadRequest(ModelState);
+    //     }
+
+    //     return new ObjectResult(review);
+    //   }
+    //   else
+    //   {
+    //       return BadRequest(ModelState);
+    //   }
+    // }
+
 
   }
 }
