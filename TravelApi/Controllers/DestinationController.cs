@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TravelApi.Models;
+using System.Linq;
+using System.Collections.Generic;
+
 
 namespace TravelApi.Controllers
 {
@@ -39,6 +42,20 @@ namespace TravelApi.Controllers
     {
       Destination destination = await _db.Destination.FindAsync(id);
 
+      if (destination == null)
+      {
+        return NotFound();
+      }
+      return destination;
+    }
+
+    [HttpGet("{id}/Reviews")]
+    public async Task<ActionResult<Destination>> GetDestinationReviews(int id)
+    {
+      Destination destination = await _db.Destination
+                      .Include(x => x.Reviews)
+                      .FirstOrDefaultAsync(i => i.DestinationId == id);
+                      
       if (destination == null)
       {
         return NotFound();
