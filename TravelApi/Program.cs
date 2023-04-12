@@ -1,8 +1,7 @@
 using TravelApi.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
-
-
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 

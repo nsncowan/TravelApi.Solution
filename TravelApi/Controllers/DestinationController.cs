@@ -4,7 +4,6 @@ using TravelApi.Models;
 using System.Linq;
 using System.Collections.Generic;
 
-
 namespace TravelApi.Controllers
 {
   [Route("api/[controller]")]
@@ -36,6 +35,35 @@ namespace TravelApi.Controllers
       }
       return await query.ToListAsync();
     }
+
+    [HttpGet("Sort/{sortOrder}")]
+    public async Task<List<Destination>> GetSort(string sortOrder)
+    {
+        // string reviewCountSortParm = String.IsNullOrEmpty(sortOrder) ? "reviewCount_desc" : "";
+        // string ratingSortParm = sortOrder == "Rating" ? "rating_desc" : "Rating";
+        var destinations = from s in _db.Destination
+                      select s;
+
+        // var destinations =  _db.Destination.Include(x => x.Reviews);
+
+        switch (sortOrder)
+        {
+            case "ratingAsc":
+                destinations = destinations.OrderBy(s => s.Rating);
+                break;
+            case "ratingDesc":
+                destinations = destinations.OrderByDescending(s => s.Rating);
+                break;
+            case "reviewCountAsc":
+                destinations = destinations.OrderBy(s => s.Reviews.Count);
+                break;
+            default:
+                destinations = destinations.OrderByDescending(s => s.Reviews.Count);
+                break;
+        }
+        return await destinations.AsNoTracking().ToListAsync();
+    }
+
 
     [HttpGet("{id}")]
     public async Task<ActionResult<Destination>> GetDestination(int id)

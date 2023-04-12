@@ -1,4 +1,6 @@
 using System.ComponentModel.DataAnnotations;
+// using System.Text.Json;
+// using System.Text.Json.Serialization;
 
 namespace TravelApi.Models
 {
@@ -9,6 +11,8 @@ namespace TravelApi.Models
     public string Text { get; set; }
     public string Author { get; set; }
     public int DestinationId { get; set; }
+
+    // [JsonIgnore]
     public Destination Destination {get; set;}
     
     [Required]
