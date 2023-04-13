@@ -68,28 +68,43 @@ namespace TravelApi.Controllers
     [HttpGet("{id}")]
     public async Task<ActionResult<Destination>> GetDestination(int id)
     {
-      Destination destination = await _db.Destination.FindAsync(id);
-
-      if (destination == null)
-      {
-        return NotFound();
-      }
-      return destination;
-    }
-
-    [HttpGet("{id}/Reviews")]
-    public async Task<ActionResult<Destination>> GetDestinationReviews(int id)
-    {
+      // Destination destination = await _db.Destination.FindAsync(id);
       Destination destination = await _db.Destination
-                      .Include(x => x.Reviews)
-                      .FirstOrDefaultAsync(i => i.DestinationId == id);
-                      
+                                .Include(x => x.Reviews)
+                                .FirstOrDefaultAsync(i => i.DestinationId == id);
+
       if (destination == null)
       {
         return NotFound();
       }
       return destination;
     }
+
+    // //GET: api/Destination/id/Destination
+    [HttpGet("{reviewId}/Destination")]
+    public async Task<ActionResult<Destination>> GetDestinationFromReview(int reviewId)
+    {
+      Review review = _db.Review
+                          .FirstOrDefault(x => x.ReviewId == reviewId);
+      if (review == null)
+      {
+        return NotFound();
+      }
+
+      Destination destination = await _db.Destination.FirstOrDefaultAsync(z => z.DestinationId == review.DestinationId);
+      if (destination == null)
+      { 
+        return NotFound();
+      }
+      return destination;
+    }
+
+    // [HttpGet]
+    // public async Task<ActionResult<Destination>> GetRandomDestination()
+    // {
+    //   // Destination destination = await _db.Destination.Where(destination.DestinationId == SOME RANDOM NUMBER GENERATED ELSEWHERE USING THE MIN AND MAX VALUES AS PARAMETERS)
+    //   return Destination;
+    // }
 
     [HttpPost]
     public async Task<ActionResult<Destination>> Post(Destination destination)
@@ -142,30 +157,5 @@ namespace TravelApi.Controllers
       await _db.SaveChangesAsync();
       return NoContent();
     }
-
-    // [HttpPatch]
-    // public IActionResult AddReview(
-    // [FromBody] Destination<Review> patchDoc)
-    // {
-    //   if (patchDoc != null)
-    //   {
-    //     var review = CreateReview();
-
-    //     patchDoc.ApplyTo(review, ModelState);
-
-    //     if (!ModelState.IsValid)
-    //     {
-    //         return BadRequest(ModelState);
-    //     }
-
-    //     return new ObjectResult(review);
-    //   }
-    //   else
-    //   {
-    //       return BadRequest(ModelState);
-    //   }
-    // }
-
-
   }
 }

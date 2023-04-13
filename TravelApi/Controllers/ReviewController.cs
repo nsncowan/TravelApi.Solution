@@ -9,8 +9,8 @@ using TravelApi.Models;
 
 namespace TravelApi.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
+  [Route("api/[controller]")]
+  [ApiController]
   public class ReviewController : ControllerBase
   {
     private readonly TravelApiContext _db;
@@ -28,39 +28,43 @@ namespace TravelApi.Controllers
     //   return await _db.Review.ToListAsync();
     // }
 
+/* 
     [HttpGet]
     public async Task<List<Review>> Get(string country, string city)
     {
       IQueryable<Review> query = _db.Review
                                     // .Include(x => x.Destination).ThenInclude(y => y.City)
                                     // .Include(b => b.Destination.Select(p => p.City))
-                                    .Include(x=>x.Destination)
+                                    // .Include(x=>x.DestinationId)
                                     .AsQueryable();
+      // Find the destination being searched
+      // Write down the destination ID
+      // Look in the Reviews database for reviews that have the ID
 
       if (country != null)
       {
-        query = query.Where(entry => entry.Destination.Country == country);
+        //Load list of destinations where country matches
+        //Load list of reviews where destination ID matches the destinations we just found
+        query = query.Where(entry => entry.DestinationId.Country == country);
       }
       if (city != null)
       {
-        query = query.Where(entry => entry.Destination.City == city);
+        query = query.Where(entry => entry.DestinationId.City == city);
       }
       return await query.ToListAsync();
     }
 
+ */   
     // GET: api/Review/5
-    [HttpGet("{id}")]
-    public async Task<ActionResult<Review>> GetReview(int id)
+    [HttpGet("{reviewId}")]
+    public async Task<ActionResult<Review>> GetReview(int reviewId)
     {
       Review review = await _db.Review
-                .FirstOrDefaultAsync(i => i.ReviewId == id);
-      var destination = await _db.Destination.FindAsync(review.DestinationId);
-
+                .FirstOrDefaultAsync(i => i.ReviewId == reviewId);
       if (review == null)
       {
           return NotFound();
       }
-
       return review;
     }
 
@@ -133,6 +137,28 @@ namespace TravelApi.Controllers
     private bool ReviewExists(int id)
     {
       return _db.Review.Any(e => e.ReviewId == id);
+    }
+
+    // Get: api/Review/5/Reviews
+
+    [HttpGet("{destinationId}/Reviews")]
+    public async Task<ActionResult<List<Review>>> GetDestinationReviews(int destinationId)
+    {
+      // Destination destination = await _db.Destination
+      //                 .Include(x => x.Reviews)
+      //                 .FirstOrDefaultAsync(i => i.DestinationId == destinationId);
+
+      // Pull list of Reviews
+      // Only get the ones where the review property matches destinationId
+      IQueryable<Review> query = _db.Review
+                                    .Where(x=> x.DestinationId == destinationId)
+                                    .AsQueryable();
+      // Return           
+      if (query == null || query.Count() == 0)
+      {
+        return NotFound();
+      }
+      return await query.ToListAsync();
     }
   }
 }
